@@ -6,7 +6,7 @@
 /*   By: nerahmou <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/11/29 18:09:11 by nerahmou     #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/05 09:21:29 by nerahmou    ###    #+. /#+    ###.fr     */
+/*   Updated: 2017/12/05 09:59:41 by nerahmou    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -69,9 +69,9 @@ int		get_next_line(int fd, char **line)
 		back_n = is_back_n(buff);
 		if ((back_n < BUFF_SIZE))
 		{
-				tmp = ft_strsub(buff, back_n + 1 , BUFF_SIZE);
-				buff[back_n] = 0;
-				ft_lstpushback_str(&malist,buff);
+			tmp = ft_strsub(buff, back_n + 1 , BUFF_SIZE);
+			buff[back_n] = 0;
+			ft_lstpushback_str(&malist,buff);
 			break;
 		}
 		else
