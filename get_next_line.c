@@ -6,81 +6,107 @@
 /*   By: nerahmou <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/11/29 18:09:11 by nerahmou     #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/05 09:59:41 by nerahmou    ###    #+. /#+    ###.fr     */
+/*   Updated: 2017/12/13 15:15:44 by nerahmou    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include "libft/libft.h"
+#include <stdio.h>
 
-size_t	is_back_n(char *buff)
+char		*ft_realloc(char **ptr, char *content)
 {
-	size_t length;
+	char *tmp;
 
-	length = 0;
-	while (buff[length] && buff[length] != '\n')
-		length++;
-	return (length);
-}
-
-size_t		list_elem_length(t_list *list)
-{
-	size_t length;
-
-	length = 0;
-	while (list)
+	if (!*ptr)
 	{
-		length += ft_strlen(list->content);
-		list = list->next;
+		if (!(*ptr = ft_strsub(content, 0, ft_strlen(content))))
+			return (NULL);
 	}
-	return (length);
-}
-
-char		*fill_str_list(t_list *list, size_t length)
-{
-	char *str;
-
-	if (!(str = ft_strnew(length)))
-		return (NULL);
-	while (list)
+	else
 	{
-		ft_strcat(str, list->content);
-		list = list->next;
+		if (!(tmp = ft_strjoin(*ptr, content)))
+			return (NULL);
+		ft_strdel(ptr);
+		*ptr = tmp;
 	}
-	return (str);
+	return (*ptr);
 }
 
-int		get_next_line(int fd, char **line)
+static int	ft_sub_tmp(char **line, char **tmp)
 {
-	static char	*tmp = NULL;
+	char	*str;
+	size_t	bck_n;
+
+	if (!ft_strlen(*tmp))
+	{
+		ft_strdel(tmp);
+		return (0);
+	}
+	if (ft_strchr(*tmp, '\n'))
+	{
+		bck_n = ft_char_pos(*tmp, '\n');
+		str = ft_strsub(*tmp, 0, bck_n);
+		if (!(ft_realloc(line, str)))
+			return (-1);
+		ft_strdel(&str);
+		if (!(str = ft_strsub(*tmp, bck_n + 1, ft_strlen(*tmp) - (bck_n + 1))))
+			return (-1);
+		ft_strdel(tmp);
+		*tmp = str;
+		return (1);
+	}
+	if (!(ft_realloc(line, *tmp)))
+		return (-1);
+	ft_strdel(tmp);
+	return (0);
+}
+
+static	int	ft_fill_line(char **line, char **tmp, int ret, int fd)
+{
+	size_t	back_n;
 	char	buff[BUFF_SIZE + 1];
-	t_list	*malist;
-	size_t back_n;
+	char	*temp;
 
-	malist = NULL;
-	if (tmp)
+	while ((ret = read(fd, buff, BUFF_SIZE)))
 	{
-		ft_lstpushback_str(&malist,tmp);
-		ft_strdel(&tmp);
-	}
-	while(read(fd, buff, BUFF_SIZE))
-	{
-		back_n = is_back_n(buff);
-		if ((back_n < BUFF_SIZE))
+		if (ret == -1)
+			return (-1);
+		buff[ret] = 0;
+		if (ft_strchr(buff, '\n'))
 		{
-			tmp = ft_strsub(buff, back_n + 1 , BUFF_SIZE);
-			buff[back_n] = 0;
-			ft_lstpushback_str(&malist,buff);
-			break;
+			back_n = ft_char_pos(buff, '\n');
+			if (!(ft_realloc(line, temp = ft_strsub(buff, 0, back_n))) ||
+					!(*tmp = ft_strsub(buff, back_n + 1, (ret - back_n) + 1)))
+				return (-1);
+			ft_strdel(&temp);
+			break ;
 		}
-		else
-		{	
-			buff[BUFF_SIZE] = 0;
-			ft_lstpushback_str(&malist,buff);
-		}
+		else if (!(temp = ft_strdup(buff)) || !(ft_realloc(line, temp)))
+			return (-1);
+		ft_strdel(&temp);
 	}
-	ft_lstdisplay_str(malist);
-	*line = fill_str_list(malist, list_elem_length(malist));
-	return (1);
+	return (ret);
+}
+
+int			get_next_line(int fd, char **line)
+{
+	static	char	*tmp = NULL;
+	int				ret;
+
+	if (BUFF_SIZE < 1 || fd < 0 || !line)
+		return (-1);
+	ret = 0;
+	*line = NULL;
+	if (tmp)
+		if ((ret = ft_sub_tmp(line, &tmp)))
+			return (1);
+	if (ft_fill_line(line, &tmp, ret, fd) == -1)
+		return (-1);
+	if (*line)
+		return (1);
+	if (ret == -1)
+		return (-1);
+	return (0);
 }
