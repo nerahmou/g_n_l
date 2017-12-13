@@ -6,7 +6,7 @@
 /*   By: nerahmou <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/11/29 18:09:11 by nerahmou     #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/13 16:30:48 by nerahmou    ###    #+. /#+    ###.fr     */
+/*   Updated: 2017/12/13 17:41:43 by nerahmou    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -96,14 +96,11 @@ int			get_next_line(int fd, char **line)
 		return (-1);
 	ret = 0;
 	*line = NULL;
-	if (tmp[fd])
-		if ((ret = ft_sub_tmp(line, tmp, fd)))
-			return (1);
-	if (ft_fill_line(line, tmp, ret, fd) == -1)
+	if (tmp[fd] && (ret = ft_sub_tmp(line, tmp, fd)))
+		return (1);
+	if (ft_fill_line(line, tmp, ret, fd) == -1 || ret == -1)
 		return (-1);
 	if (*line)
 		return (1);
-	if (ret == -1)
-		return (-1);
 	return (0);
 }
