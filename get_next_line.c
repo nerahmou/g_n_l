@@ -6,7 +6,7 @@
 /*   By: nerahmou <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/11/29 18:09:11 by nerahmou     #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/13 15:30:51 by nerahmou    ###    #+. /#+    ###.fr     */
+/*   Updated: 2017/12/13 16:30:48 by nerahmou    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -33,32 +33,30 @@ char		*ft_realloc(char **ptr, char *content)
 	return (*ptr);
 }
 
-static int	ft_sub_tmp(char **line, char **tmp)
+static int	ft_sub_tmp(char **line, char **tmp, int fd)
 {
 	char	*str;
 	size_t	bck_n;
 
-	if (!ft_strlen(*tmp))
-	{
-		ft_strdel(tmp);
+	if (!ft_strlen(tmp[fd]))
 		return (0);
-	}
-	if (ft_strchr(*tmp, '\n'))
+	if (ft_strchr(tmp[fd], '\n'))
 	{
-		bck_n = ft_char_pos(*tmp, '\n');
-		str = ft_strsub(*tmp, 0, bck_n);
+		bck_n = ft_char_pos(tmp[fd], '\n');
+		str = ft_strsub(tmp[fd], 0, bck_n);
 		if (!(ft_realloc(line, str)))
 			return (-1);
 		ft_strdel(&str);
-		if (!(str = ft_strsub(*tmp, bck_n + 1, ft_strlen(*tmp) - (bck_n + 1))))
+		if (!(str = ft_strsub(tmp[fd], bck_n + 1,
+						ft_strlen(tmp[fd]) - (bck_n + 1))))
 			return (-1);
-		ft_strdel(tmp);
-		*tmp = str;
+		ft_strdel(&tmp[fd]);
+		tmp[fd] = str;
 		return (1);
 	}
-	if (!(ft_realloc(line, *tmp)))
+	if (!(ft_realloc(line, tmp[fd])))
 		return (-1);
-	ft_strdel(tmp);
+	ft_strdel(&tmp[fd]);
 	return (0);
 }
 
@@ -77,7 +75,7 @@ static	int	ft_fill_line(char **line, char **tmp, int ret, int fd)
 		{
 			back_n = ft_char_pos(buff, '\n');
 			if (!(ft_realloc(line, temp = ft_strsub(buff, 0, back_n))) ||
-					!(*tmp = ft_strsub(buff, back_n + 1, (ret - back_n) + 1)))
+				!(tmp[fd] = ft_strsub(buff, back_n + 1, (ret - back_n) + 1)))
 				return (-1);
 			ft_strdel(&temp);
 			break ;
@@ -91,17 +89,17 @@ static	int	ft_fill_line(char **line, char **tmp, int ret, int fd)
 
 int			get_next_line(int fd, char **line)
 {
-	static	char	*tmp = NULL;
+	static	char	*tmp[4600] = {0};
 	int				ret;
 
-	if (BUFF_SIZE < 1 || fd < 0 || !line)
+	if (BUFF_SIZE < 1 || fd < 0 || fd >= 4600 || !line)
 		return (-1);
 	ret = 0;
 	*line = NULL;
-	if (tmp)
-		if ((ret = ft_sub_tmp(line, &tmp)))
+	if (tmp[fd])
+		if ((ret = ft_sub_tmp(line, tmp, fd)))
 			return (1);
-	if (ft_fill_line(line, &tmp, ret, fd) == -1)
+	if (ft_fill_line(line, tmp, ret, fd) == -1)
 		return (-1);
 	if (*line)
 		return (1);
