@@ -6,14 +6,14 @@
 /*   By: nerahmou <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/11/29 13:44:34 by nerahmou     #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/13 16:33:29 by nerahmou    ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/09/10 16:56:12 by nerahmou    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-# define BUFF_SIZE 32
+# define BUFF_SIZE 10
 # include <unistd.h>
 # include <stdlib.h>
 
