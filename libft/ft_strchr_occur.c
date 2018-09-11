@@ -1,22 +1,28 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   get_next_line.h                                  .::    .:/ .      .::   */
+/*   ft_strchr_occur.c                                .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: nerahmou <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2017/11/29 13:44:34 by nerahmou     #+#   ##    ##    #+#       */
-/*   Updated: 2018/09/11 10:23:00 by nerahmou    ###    #+. /#+    ###.fr     */
+/*   Created: 2018/05/29 19:41:27 by nerahmou     #+#   ##    ##    #+#       */
+/*   Updated: 2018/06/29 20:15:14 by nerahmou    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 1
-# include <unistd.h>
-# include <stdlib.h>
+#include "libft.h"
 
-int	get_next_line(const int fd, char **line);
+int	ft_strchr_occur(char *s, int c)
+{
+	int	i;
 
-#endif
+	i = 0;
+	while (*s)
+	{
+		if (*s == c)
+			i++;
+		s++;
+	}
+	return (i);
+}

@@ -1,22 +1,33 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   get_next_line.h                                  .::    .:/ .      .::   */
+/*   print_m.c                                        .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: nerahmou <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2017/11/29 13:44:34 by nerahmou     #+#   ##    ##    #+#       */
-/*   Updated: 2018/09/11 10:23:00 by nerahmou    ###    #+. /#+    ###.fr     */
+/*   Created: 2018/01/05 22:04:00 by nerahmou     #+#   ##    ##    #+#       */
+/*   Updated: 2018/01/17 13:58:24 by nerahmou    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 1
-# include <unistd.h>
-# include <stdlib.h>
+#include "../include/ft_printf.h"
 
-int	get_next_line(const int fd, char **line);
-
-#endif
+void	print_m(t_suitcase *s_c)
+{
+	if (s_c->type)
+	{
+		if (s_c->is_minus)
+		{
+			s_c->ret += ft_putchar(s_c->type);
+			while (--s_c->width > 0)
+				s_c->ret += ft_putchar(' ');
+		}
+		else
+		{
+			while (s_c->width-- > 1)
+				s_c->ret += s_c->is_zero ? ft_putchar('0') : ft_putchar(' ');
+			s_c->ret += ft_putchar(s_c->type);
+		}
+	}
+}

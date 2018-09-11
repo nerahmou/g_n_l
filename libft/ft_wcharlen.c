@@ -1,22 +1,39 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   get_next_line.h                                  .::    .:/ .      .::   */
+/*   wcharlen.c                                       .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: nerahmou <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2017/11/29 13:44:34 by nerahmou     #+#   ##    ##    #+#       */
-/*   Updated: 2018/09/11 10:23:00 by nerahmou    ###    #+. /#+    ###.fr     */
+/*   Created: 2018/01/04 11:26:12 by nerahmou     #+#   ##    ##    #+#       */
+/*   Updated: 2018/01/15 23:23:54 by nerahmou    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 1
-# include <unistd.h>
-# include <stdlib.h>
+#include "libft.h"
 
-int	get_next_line(const int fd, char **line);
+int	ft_wcharlen(wchar_t c)
+{
+	int length;
 
-#endif
+	length = 0;
+	if (c < 0 || c > 0x10FFFF || ((c >= 0xD800) && (c <= 0xDFFF)))
+		length = -1;
+	else if (c < 0x80)
+		length = 1;
+	else if (c <= 255 && MB_CUR_MAX == 1)
+		length = 1;
+	else if (c > 127 && MB_CUR_MAX > 1)
+	{
+		if (c < 0x800)
+			length = 2;
+		else if (c < 0x10000)
+			length = 3;
+		else if (c < 0x110000)
+			length = 4;
+	}
+	else
+		length = -1;
+	return (length);
+}
