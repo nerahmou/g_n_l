@@ -4,4 +4,4 @@
 
 <p>• Filedescriptors</p>
 <p>• Bufferisation</p>
-<p>• Basique Parsing</p>
+<p>• Basic Parsing</p>
